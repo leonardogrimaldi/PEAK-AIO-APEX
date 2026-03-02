@@ -1,6 +1,6 @@
 <img width="539" height="339" alt="mod-theme" src="https://github.com/user-attachments/assets/94fcbccf-5833-4e3f-8beb-6d5709f11481" />
 
-# PEAK AIO Mod
+# PEAK AIO APEX Mod
 
 [![Stars](https://img.shields.io/github/stars/elliot35/PEAK-AIO-int?style=flat)](https://github.com/elliot35/PEAK-AIO-int/stargazers)
 [![Forks](https://img.shields.io/github/forks/elliot35/PEAK-AIO-int?style=flat)](https://github.com/elliot35/PEAK-AIO-int/network/members)
