@@ -1,4 +1,4 @@
-# PEAK AIO Mod
+<img width="539" height="339" alt="屏幕截图 2026-03-03 023947" src="https://github.com/user-attachments/assets/94fcbccf-5833-4e3f-8beb-6d5709f11481" /># PEAK AIO Mod
 
 An all-in-one mod menu for [PEAK](https://store.steampowered.com/app/2873498/PEAK/) that brings together player enhancements, inventory tools, teleportation, world interaction, and lobby control in a clean, tabbed ImGui interface.
 
@@ -220,6 +220,8 @@ The **World** tab lists all luggage and containers within 300 meters. You can re
 
 ## Screenshots
 
+<img width="913" height="519" alt="Players tab chinese" src="https://github.com/user-attachments/assets/1371390e-9a60-4393-8985-af6dd81c00a0" />
+<img width="913" height="519" alt="Items tab chinese" src="https://github.com/user-attachments/assets/ebb2778c-cdd9-4727-ac26-b661ca061335" />
 ![Player Tab](https://i.imgur.com/BdaiB4F.png)
 ![Items Tab](https://i.imgur.com/KOoMNCj.png)
 ![Lobby Tab](https://i.imgur.com/yY5JnAh.png)
