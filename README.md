@@ -11,8 +11,9 @@
 ![中文](https://img.shields.io/badge/lang-简体中文-red)
 ![日本語](https://img.shields.io/badge/lang-日本語-green)
 ![한국어](https://img.shields.io/badge/lang-한국어-orange)
+![Thunderstore](https://thunderstore.io/c/peak/p/k1r_gamer/PEAK_AIO_APEX)
 
-An all-in-one mod menu for [PEAK](https://store.steampowered.com/app/2873498/PEAK/) that brings together player enhancements, inventory tools, teleportation, world interaction, and lobby control in a clean, tabbed ImGui interface.
+An all-in-one mod menu for [PEAK](https://store.steampowered.com/app/2873498/PEAK/) that brings together player enhancements, inventory tools, teleportation, world interaction, and lobby control in a clean, tabbed ImGui interface. Inspired by PEAK-AIO.
 
 Supports **English**, **简体中文**, **日本語**, and **한국어**.
 
@@ -270,6 +271,7 @@ The **World** tab lists all luggage and containers within 300 meters. You can re
 
 ## Credits
 
+- [PEAK-AIO](https://github.com/OniSensei/PEAK-AIO) - Original PEAK AIO Mod
 - [DearImGuiInjection](https://github.com/xiaoxiao921/DearImGuiInjection) — ImGui UI injection for Unity
 - [HarmonyX](https://github.com/BepInEx/HarmonyX) — runtime method patching
 - [BepInEx](https://github.com/BepInEx/BepInEx) — Unity modding framework
