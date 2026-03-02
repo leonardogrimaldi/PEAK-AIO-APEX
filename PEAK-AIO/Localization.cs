@@ -303,7 +303,7 @@ public static class Localization
         }},
         { "tip.recharge", new Dictionary<Language, string> {
             { Language.English, "Set how much to recharge the item's charges when clicking 'Recharge'." },
-            { Language.SimplifiedChinese, "设置点击"充能"时为物品充能的数量。" },
+            { Language.SimplifiedChinese, "设置点击「充能」时为物品充能的数量。" },
             { Language.Japanese, "「チャージ」クリック時のチャージ量を設定します。" },
             { Language.Korean, "'충전' 클릭 시 아이템 충전량을 설정합니다." }
         }},
