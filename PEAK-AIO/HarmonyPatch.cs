@@ -172,21 +172,29 @@ public static class CJKFontPatch
 
 public static class ImGuiInputPatch
 {
+    [DllImport("user32.dll")]
+    private static extern short GetAsyncKeyState(int vKey);
+
+    private const int VK_LBUTTON = 0x01;
+    private const int VK_RBUTTON = 0x02;
+    private const int VK_MBUTTON = 0x04;
+
     private static System.Numerics.Vector2 cachedMousePos;
-    private static bool[] cachedMouseButtons = new bool[3];
-    private static float cachedMouseWheel;
+    private static bool cachedLButton, cachedRButton, cachedMButton;
+    private static float cachedScroll;
     private static bool forceInput;
 
     public static void SetForceInput(bool enabled) => forceInput = enabled;
 
-    public static void CaptureUnityInput()
+    public static void CaptureInput()
     {
+        cachedLButton = (GetAsyncKeyState(VK_LBUTTON) & 0x8000) != 0;
+        cachedRButton = (GetAsyncKeyState(VK_RBUTTON) & 0x8000) != 0;
+        cachedMButton = (GetAsyncKeyState(VK_MBUTTON) & 0x8000) != 0;
+
         var pos = UnityEngine.Input.mousePosition;
         cachedMousePos = new System.Numerics.Vector2(pos.x, Screen.height - pos.y);
-        cachedMouseButtons[0] = UnityEngine.Input.GetMouseButton(0);
-        cachedMouseButtons[1] = UnityEngine.Input.GetMouseButton(1);
-        cachedMouseButtons[2] = UnityEngine.Input.GetMouseButton(2);
-        cachedMouseWheel = UnityEngine.Input.mouseScrollDelta.y;
+        cachedScroll = UnityEngine.Input.mouseScrollDelta.y;
     }
 
     public static void Prefix()
@@ -197,10 +205,10 @@ public static class ImGuiInputPatch
         {
             var io = ImGui.GetIO();
             io.MousePos = cachedMousePos;
-            io.MouseDown[0] = cachedMouseButtons[0];
-            io.MouseDown[1] = cachedMouseButtons[1];
-            io.MouseDown[2] = cachedMouseButtons[2];
-            io.MouseWheel = cachedMouseWheel;
+            io.MouseDown[0] = cachedLButton;
+            io.MouseDown[1] = cachedRButton;
+            io.MouseDown[2] = cachedMButton;
+            io.MouseWheel = cachedScroll;
         }
         catch { }
     }

@@ -13,7 +13,7 @@ using Photon.Pun;
 using System.Collections.Generic;
 
 [BepInDependency(DearImGuiInjection.Metadata.GUID)]
-[BepInPlugin("com.onigremlin.peakaio", "PEAK AIO Mod", "1.0.14")]
+[BepInPlugin("com.onigremlin.peakaio", "PEAK AIO Mod", "1.0.15")]
 
 public class PeakMod : BaseUnityPlugin
 {
@@ -125,8 +125,6 @@ public class PeakMod : BaseUnityPlugin
         var diAssembly = typeof(DearImGuiInjection.DearImGuiInjection).Assembly;
         var cjkPrefixMethod = new HarmonyMethod(typeof(CJKFontPatch).GetMethod("Prefix",
             BindingFlags.Public | BindingFlags.Static));
-        var inputPrefixMethod = new HarmonyMethod(typeof(ImGuiInputPatch).GetMethod("Prefix",
-            BindingFlags.Public | BindingFlags.Static));
 
         string[] backendTypeNames = {
             "DearImGuiInjection.Backends.ImGuiDX12Impl",
@@ -145,13 +143,25 @@ public class PeakMod : BaseUnityPlugin
                 if (newFrameMethod == null) continue;
 
                 harmony.Patch(newFrameMethod, prefix: cjkPrefixMethod);
-                harmony.Patch(newFrameMethod, prefix: inputPrefixMethod);
-                Logger.LogInfo($"[PEAK AIO] Patched {typeName}.NewFrame for CJK fonts and input.");
+                Logger.LogInfo($"[PEAK AIO] Patched {typeName}.NewFrame for CJK fonts.");
             }
             catch (Exception ex)
             {
                 Logger.LogWarning($"[PEAK AIO] Failed to patch {typeName}.NewFrame: {ex.Message}");
             }
+        }
+
+        var inputPrefixMethod = new HarmonyMethod(typeof(ImGuiInputPatch).GetMethod("Prefix",
+            BindingFlags.Public | BindingFlags.Static));
+        var imguiNewFrame = typeof(ImGui).GetMethod("NewFrame", BindingFlags.Public | BindingFlags.Static);
+        if (imguiNewFrame != null)
+        {
+            harmony.Patch(imguiNewFrame, prefix: inputPrefixMethod);
+            Logger.LogInfo("[PEAK AIO] Patched ImGui.NewFrame for input override.");
+        }
+        else
+        {
+            Logger.LogWarning("[PEAK AIO] Could not find ImGui.NewFrame to patch for input.");
         }
 
         Logger.LogInfo("Harmony patches applied.");
@@ -177,7 +187,7 @@ public class PeakMod : BaseUnityPlugin
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             ImGuiInputPatch.SetForceInput(true);
-            ImGuiInputPatch.CaptureUnityInput();
+            ImGuiInputPatch.CaptureInput();
         }
         else
         {
