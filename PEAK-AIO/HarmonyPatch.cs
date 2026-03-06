@@ -230,7 +230,16 @@ public static class ImGuiInputPatch
             io.MouseDown[2] = cachedMButton;
             io.MouseWheel = cachedScroll;
 
-            if (logFrames < 10)
+            if (cachedLButton && logFrames < 50)
+            {
+                logFrames++;
+                ConfigManager.Logger.LogInfo(
+                    $"[InputPatch] CLICK pos=({cachedMousePos.X:F0},{cachedMousePos.Y:F0}) " +
+                    $"L={cachedLButton} readback: down0={io.MouseDown[0]} " +
+                    $"pos=({io.MousePos.X:F0},{io.MousePos.Y:F0}) " +
+                    $"WantCapture={io.WantCaptureMouse}");
+            }
+            else if (logFrames < 5)
             {
                 logFrames++;
                 ConfigManager.Logger.LogInfo(
