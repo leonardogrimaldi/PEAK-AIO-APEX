@@ -170,6 +170,42 @@ public static class CJKFontPatch
     }
 }
 
+public static class ImGuiInputPatch
+{
+    private static System.Numerics.Vector2 cachedMousePos;
+    private static bool[] cachedMouseButtons = new bool[3];
+    private static float cachedMouseWheel;
+    private static bool forceInput;
+
+    public static void SetForceInput(bool enabled) => forceInput = enabled;
+
+    public static void CaptureUnityInput()
+    {
+        var pos = UnityEngine.Input.mousePosition;
+        cachedMousePos = new System.Numerics.Vector2(pos.x, Screen.height - pos.y);
+        cachedMouseButtons[0] = UnityEngine.Input.GetMouseButton(0);
+        cachedMouseButtons[1] = UnityEngine.Input.GetMouseButton(1);
+        cachedMouseButtons[2] = UnityEngine.Input.GetMouseButton(2);
+        cachedMouseWheel = UnityEngine.Input.mouseScrollDelta.y;
+    }
+
+    public static void Prefix()
+    {
+        if (!forceInput) return;
+
+        try
+        {
+            var io = ImGui.GetIO();
+            io.MousePos = cachedMousePos;
+            io.MouseDown[0] = cachedMouseButtons[0];
+            io.MouseDown[1] = cachedMouseButtons[1];
+            io.MouseDown[2] = cachedMouseButtons[2];
+            io.MouseWheel = cachedMouseWheel;
+        }
+        catch { }
+    }
+}
+
 [HarmonyPatch(typeof(CharacterAfflictions), "UpdateWeight")]
 public class Patch_UpdateWeight
 {

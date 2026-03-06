@@ -13,7 +13,7 @@ using Photon.Pun;
 using System.Collections.Generic;
 
 [BepInDependency(DearImGuiInjection.Metadata.GUID)]
-[BepInPlugin("com.onigremlin.peakaio", "PEAK AIO Mod", "1.0.13")]
+[BepInPlugin("com.onigremlin.peakaio", "PEAK AIO Mod", "1.0.14")]
 
 public class PeakMod : BaseUnityPlugin
 {
@@ -123,7 +123,9 @@ public class PeakMod : BaseUnityPlugin
         harmony.PatchAll();
 
         var diAssembly = typeof(DearImGuiInjection.DearImGuiInjection).Assembly;
-        var prefixMethod = new HarmonyMethod(typeof(CJKFontPatch).GetMethod("Prefix",
+        var cjkPrefixMethod = new HarmonyMethod(typeof(CJKFontPatch).GetMethod("Prefix",
+            BindingFlags.Public | BindingFlags.Static));
+        var inputPrefixMethod = new HarmonyMethod(typeof(ImGuiInputPatch).GetMethod("Prefix",
             BindingFlags.Public | BindingFlags.Static));
 
         string[] backendTypeNames = {
@@ -142,8 +144,9 @@ public class PeakMod : BaseUnityPlugin
                     BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
                 if (newFrameMethod == null) continue;
 
-                harmony.Patch(newFrameMethod, prefix: prefixMethod);
-                Logger.LogInfo($"[PEAK AIO] Patched {typeName}.NewFrame for CJK fonts.");
+                harmony.Patch(newFrameMethod, prefix: cjkPrefixMethod);
+                harmony.Patch(newFrameMethod, prefix: inputPrefixMethod);
+                Logger.LogInfo($"[PEAK AIO] Patched {typeName}.NewFrame for CJK fonts and input.");
             }
             catch (Exception ex)
             {
@@ -173,6 +176,12 @@ public class PeakMod : BaseUnityPlugin
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            ImGuiInputPatch.SetForceInput(true);
+            ImGuiInputPatch.CaptureUnityInput();
+        }
+        else
+        {
+            ImGuiInputPatch.SetForceInput(false);
         }
     }
 
