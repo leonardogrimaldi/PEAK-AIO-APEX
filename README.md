@@ -108,7 +108,7 @@ Supports **English**, **简体中文**, **日本語**, **한국어**, and **Ital
 ### Step 2 — Install DearImGuiInjection
 
 1. Download [DearImGuiInjection](https://thunderstore.io/c/peak/p/penswer/DearImGuiInjection/) from Thunderstore.
-2. Place the `DearImGuiInjection.dll` into `BepInEx/plugins/`.
+2. Place the `DearImGuiInjection` into `BepInEx/plugins/`.
 
 ### Step 3 — Install PEAK AIO
 
@@ -125,7 +125,7 @@ Your final `BepInEx/plugins/` folder should look like:
 
 ```
 BepInEx/plugins/
-├── DearImGuiInjection.dll
+├── DearImGuiInjection
 └── PEAK-AIO.dll
 ```
 
@@ -223,7 +223,7 @@ The **World** tab lists all luggage and containers within 300 meters. You can re
 
 | Issue | Solution |
 |---|---|
-| Menu doesn't appear | Make sure you're running **DirectX 12** (not Vulkan). Check that both `DearImGuiInjection.dll` and `PEAK-AIO.dll` are in `BepInEx/plugins/`. |
+| Menu doesn't appear | Make sure you're running **DirectX 12** (not Vulkan). Check that both `DearImGuiInjection` and `PEAK-AIO.dll` are in `BepInEx/plugins/`. |
 | Insert key doesn't work | Another program may be capturing the key. Change the hotkey in the config file (see [Configuration](#configuration)). |
 | Game crashes on launch | Verify you're using **BepInEx 5.4.23.3** (not 6.x). Remove any conflicting mods from the plugins folder. |
 | Config file doesn't exist | Run the game once with the mod installed. The file is generated automatically at `BepInEx/config/com.onigremlin.peakaio.cfg`. |
