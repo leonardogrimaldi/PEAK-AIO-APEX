@@ -111,28 +111,50 @@ public class FlyPatch
 public static class CJKFontPatch
 {
     private static bool fontsLoaded = false;
-    private static GCHandle rangesHandle;
+    private static GCHandle cjkRangesHandle;
+    private static GCHandle koreanRangesHandle;
 
-    // Combined glyph ranges: Latin + CJK + Hiragana/Katakana + Hangul
-    private static readonly ushort[] CombinedRanges = {
+    public static ImFontPtr CjkFont;
+    public static ImFontPtr KoreanFont;
+    public static bool HasCjkFont = false;
+    public static bool HasKoreanFont = false;
+
+    private static readonly ushort[] CjkRanges = {
         0x0020, 0x00FF, // Basic Latin + Latin-1 Supplement
         0x2000, 0x206F, // General Punctuation
         0x3000, 0x30FF, // CJK Symbols, Hiragana, Katakana
-        0x3131, 0x3163, // Korean Alphabets (Jamo)
         0x31F0, 0x31FF, // Katakana Phonetic Extensions
         0x4E00, 0x9FFF, // CJK Unified Ideographs
+        0xFF00, 0xFFEF, // Halfwidth/Fullwidth Forms
+        0x0000
+    };
+
+    private static readonly ushort[] KoreanRanges = {
+        0x0020, 0x00FF, // Basic Latin + Latin-1 Supplement
+        0x2000, 0x206F, // General Punctuation
+        0x3131, 0x3163, // Korean Alphabets (Jamo)
         0xAC00, 0xD7A3, // Hangul Syllables
         0xFF00, 0xFFEF, // Halfwidth/Fullwidth Forms
         0x0000          // Null terminator
     };
 
-    private static readonly string[] FontCandidates = {
-        @"C:\Windows\Fonts\malgun.ttf",
-        @"C:\Windows\Fonts\malgunsl.ttf",
+    private static readonly string[] CjkFontCandidates = {
         @"C:\Windows\Fonts\msyh.ttc",
         @"C:\Windows\Fonts\meiryo.ttc",
         @"C:\Windows\Fonts\yugothm.ttc",
     };
+
+    private static readonly string[] KoreanFontCandidates = {
+        @"C:\Windows\Fonts\malgun.ttf",
+        @"C:\Windows\Fonts\malgunsl.ttf",
+    };
+
+    private static string FindFirst(string[] paths)
+    {
+        foreach (var p in paths)
+            if (System.IO.File.Exists(p)) return p;
+        return null;
+    }
 
     public static unsafe void Prefix()
     {
@@ -144,41 +166,46 @@ public static class CJKFontPatch
             var io = ImGui.GetIO();
             var fonts = io.Fonts;
 
-            rangesHandle = GCHandle.Alloc(CombinedRanges, GCHandleType.Pinned);
-            IntPtr rangesPtr = rangesHandle.AddrOfPinnedObject();
+            cjkRangesHandle = GCHandle.Alloc(CjkRanges, GCHandleType.Pinned);
+            koreanRangesHandle = GCHandle.Alloc(KoreanRanges, GCHandleType.Pinned);
+            IntPtr cjkRangesPtr = cjkRangesHandle.AddrOfPinnedObject();
+            IntPtr koreanRangesPtr = koreanRangesHandle.AddrOfPinnedObject();
 
-            string chosenFont = null;
-            foreach (var path in FontCandidates)
+            string cjkPath = FindFirst(CjkFontCandidates);
+            string koreanPath = FindFirst(KoreanFontCandidates);
+
+            if (cjkPath != null)
             {
-                if (System.IO.File.Exists(path))
-                {
-                    chosenFont = path;
-                    break;
-                }
+                CjkFont = fonts.AddFontFromFileTTF(cjkPath, 14.0f, default, cjkRangesPtr);
+                HasCjkFont = CjkFont.NativePtr != null;
+                ConfigManager.Logger.LogInfo($"[PEAK AIO] CJK font ({System.IO.Path.GetFileName(cjkPath)}): {(HasCjkFont ? "OK" : "FAILED")}");
             }
 
-            if (chosenFont != null)
+            if (koreanPath != null)
             {
-                var cjkFont = fonts.AddFontFromFileTTF(chosenFont, 14.0f, default, rangesPtr);
-                ConfigManager.Logger.LogInfo($"[PEAK AIO] CJK font ({System.IO.Path.GetFileName(chosenFont)}): {(cjkFont.NativePtr != null ? "OK" : "FAILED")}");
-
-                if (cjkFont.NativePtr != null)
-                    io.NativePtr->FontDefault = cjkFont.NativePtr;
+                KoreanFont = fonts.AddFontFromFileTTF(koreanPath, 14.0f, default, koreanRangesPtr);
+                HasKoreanFont = KoreanFont.NativePtr != null;
+                ConfigManager.Logger.LogInfo($"[PEAK AIO] Korean font ({System.IO.Path.GetFileName(koreanPath)}): {(HasKoreanFont ? "OK" : "FAILED")}");
             }
+
+            if (HasCjkFont)
+                io.NativePtr->FontDefault = CjkFont.NativePtr;
+            else if (HasKoreanFont)
+                io.NativePtr->FontDefault = KoreanFont.NativePtr;
             else
-            {
-                ConfigManager.Logger.LogWarning("[PEAK AIO] No suitable CJK font found, using default font.");
-            }
+                ConfigManager.Logger.LogWarning("[PEAK AIO] No CJK/Korean fonts found, using default font.");
 
             bool built = fonts.Build();
             ConfigManager.Logger.LogInfo($"[PEAK AIO] Atlas build: {(built ? "OK" : "FAILED")}, size: {fonts.TexWidth}x{fonts.TexHeight}, fonts: {fonts.Fonts.Size}");
 
-            if (rangesHandle.IsAllocated) rangesHandle.Free();
+            if (cjkRangesHandle.IsAllocated) cjkRangesHandle.Free();
+            if (koreanRangesHandle.IsAllocated) koreanRangesHandle.Free();
         }
         catch (Exception ex)
         {
-            if (rangesHandle.IsAllocated) rangesHandle.Free();
-            ConfigManager.Logger.LogWarning("[PEAK AIO] CJK font loading failed: " + ex.Message);
+            if (cjkRangesHandle.IsAllocated) cjkRangesHandle.Free();
+            if (koreanRangesHandle.IsAllocated) koreanRangesHandle.Free();
+            ConfigManager.Logger.LogWarning("[PEAK AIO] Font loading failed: " + ex.Message);
         }
     }
 }

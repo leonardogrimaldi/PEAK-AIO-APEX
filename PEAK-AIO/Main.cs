@@ -316,6 +316,7 @@ public class PeakMod : BaseUnityPlugin
 
     private void MyUI()
     {
+        bool fontPushed = false;
         try
         {
             if (!showMenu)
@@ -327,6 +328,17 @@ public class PeakMod : BaseUnityPlugin
             {
                 ApplyCustomStyle();
                 styleApplied = true;
+            }
+
+            if (Localization.CurrentLanguage == Language.Korean && CJKFontPatch.HasKoreanFont)
+            {
+                ImGui.PushFont(CJKFontPatch.KoreanFont);
+                fontPushed = true;
+            }
+            else if (Localization.CurrentLanguage != Language.Korean && CJKFontPatch.HasCjkFont)
+            {
+                ImGui.PushFont(CJKFontPatch.CjkFont);
+                fontPushed = true;
             }
 
             // Set window position and size
@@ -921,9 +933,14 @@ public class PeakMod : BaseUnityPlugin
 
             ImGuiInputPatch.LogPostNewFrame();
             ImGui.End();
+
+            if (fontPushed)
+                ImGui.PopFont();
         }
         catch (Exception ex)
         {
+            if (fontPushed)
+                ImGui.PopFont();
             ConfigManager.Logger.LogError("[UI ERROR] Exception in MyUI: " + ex);
         }
     }
