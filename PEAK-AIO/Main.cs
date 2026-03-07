@@ -20,7 +20,12 @@ public class PeakMod : BaseUnityPlugin
     // Menu
     private bool styleApplied = false;
     private bool showMenu = false;
+    private bool wasMenuScene = false;
     private int selectedTab = 1;
+    private static readonly FieldInfo cursorVisibleField = typeof(DearImGuiInjection.DearImGuiInjection)
+        .GetField("<IsCursorVisible>k__BackingField", BindingFlags.Static | BindingFlags.NonPublic);
+    private static readonly MethodInfo updateCursorMethod = typeof(DearImGuiInjection.DearImGuiInjection)
+        .GetMethod("UpdateCursorVisibility", BindingFlags.Static | BindingFlags.NonPublic);
 
     private void ApplyCustomStyle()
     {
@@ -167,6 +172,17 @@ public class PeakMod : BaseUnityPlugin
     {
         Logger.LogInfo("[PEAK AIO] OnDisable called");
         DearImGuiInjection.DearImGuiInjection.Render -= MyUI;
+
+        if (showMenu && !wasMenuScene)
+        {
+            try
+            {
+                var handler = CursorHandler.Instance;
+                if (handler != null)
+                    handler.isMenuScene = false;
+            }
+            catch { }
+        }
     }
 
     private void Update()
@@ -174,7 +190,38 @@ public class PeakMod : BaseUnityPlugin
         if (UnityEngine.Input.GetKeyDown(ConfigManager.MenuToggleKey.Value))
         {
             showMenu = !showMenu;
-            CursorHandler.Instance.isMenuScene = showMenu;
+
+            try
+            {
+                var handler = CursorHandler.Instance;
+                if (handler != null)
+                {
+                    if (showMenu)
+                    {
+                        wasMenuScene = handler.isMenuScene;
+                        if (!wasMenuScene)
+                            handler.isMenuScene = true;
+                    }
+                    else if (!wasMenuScene)
+                    {
+                        handler.isMenuScene = false;
+                    }
+                }
+            }
+            catch { }
+
+            cursorVisibleField?.SetValue(null, showMenu);
+            updateCursorMethod?.Invoke(null, null);
+        }
+
+        if (showMenu)
+        {
+            ImGuiInputPatch.SetForceInput(true);
+            ImGuiInputPatch.CaptureInput();
+        }
+        else
+        {
+            ImGuiInputPatch.SetForceInput(false);
         }
     }
 
@@ -282,13 +329,9 @@ public class PeakMod : BaseUnityPlugin
                 styleApplied = true;
             }
 
-            if (!DearImGuiInjection.DearImGuiInjection.IsCursorVisible)
-                return;
-
             // Set window position and size
             ImGui.SetNextWindowPos(new System.Numerics.Vector2(20, 20), ImGuiCond.Once);
             ImGui.SetNextWindowSize(new System.Numerics.Vector2(500, 300), ImGuiCond.Once);
-            ImGui.SetNextWindowFocus();
 
             if (ImGui.Begin("PEAK AIO##Main", ImGuiWindowFlags.NoCollapse))
             {
