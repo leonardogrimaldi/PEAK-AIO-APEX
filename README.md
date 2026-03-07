@@ -286,9 +286,28 @@ The **World** tab lists all luggage and containers within 300 meters. You can re
 
 Thanks to everyone who has contributed to this project!
 
-<a href="https://github.com/elliot35"><img src="https://avatars.githubusercontent.com/u/41864818?v=4" width="60" height="60" style="border-radius:50%" alt="elliot35" /></a>
-<a href="https://github.com/OniSensei"><img src="https://avatars.githubusercontent.com/u/42307760?v=4" width="60" height="60" style="border-radius:50%" alt="OniSensei" /></a>
-<a href="https://github.com/leonardogrimaldi"><img src="https://avatars.githubusercontent.com/u/18250273?v=4" width="60" height="60" style="border-radius:50%" alt="leonardogrimaldi" /></a>
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/elliot35">
+        <img src="https://avatars.githubusercontent.com/u/41864818?v=4" width="80" height="80" style="border-radius:50%" alt="elliot35" /><br />
+        <sub><b>elliot35</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/leonardogrimaldi">
+        <img src="https://avatars.githubusercontent.com/u/18250273?v=4" width="80" height="80" style="border-radius:50%" alt="leonardogrimaldi" /><br />
+        <sub><b>leonardogrimaldi</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/OniSensei">
+        <img src="https://avatars.githubusercontent.com/u/42307760?v=4" width="80" height="80" style="border-radius:50%" alt="OniSensei" /><br />
+        <sub><b>OniSensei</b></sub>
+      </a>
+    </td>
+  </tr>
+</table>
 
 ---
 
