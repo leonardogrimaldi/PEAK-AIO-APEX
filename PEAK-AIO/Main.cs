@@ -13,7 +13,7 @@ using Photon.Pun;
 using System.Collections.Generic;
 
 [BepInDependency(DearImGuiInjection.Metadata.GUID)]
-[BepInPlugin("com.onigremlin.peakaio", "PEAK AIO Mod", "1.0.15")]
+[BepInPlugin("com.onigremlin.peakaio", "PEAK AIO Mod", "1.0.16")]
 
 public class PeakMod : BaseUnityPlugin
 {
