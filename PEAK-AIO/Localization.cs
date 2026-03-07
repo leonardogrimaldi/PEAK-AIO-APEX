@@ -650,12 +650,12 @@ public static class Localization
             { Language.Italian, "PEAK AIO Mod" }
         }},
         { "about.version", new Dictionary<Language, string> {
-            { Language.English, "Version: 1.0.16" },
-            { Language.SimplifiedChinese, "版本: 1.0.16" },
-            { Language.TraditionalChinese, "版本: 1.0.16" },
-            { Language.Japanese, "バージョン: 1.0.16" },
-            { Language.Korean, "버전: 1.0.16" },
-            { Language.Italian, "Versione: 1.0.16" }
+            { Language.English, "Version: 1.0.17" },
+            { Language.SimplifiedChinese, "版本: 1.0.17" },
+            { Language.TraditionalChinese, "版本: 1.0.17" },
+            { Language.Japanese, "バージョン: 1.0.17" },
+            { Language.Korean, "버전: 1.0.17" },
+            { Language.Italian, "Versione: 1.0.17" }
         }},
         { "about.author", new Dictionary<Language, string> {
             { Language.English, "Author: K1rito (Inspired by OniGremlin)" },
