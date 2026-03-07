@@ -910,7 +910,7 @@ public class PeakMod : BaseUnityPlugin
                         bool isActive = ((int)Localization.CurrentLanguage == i);
 
                         bool needKoreanFont = (i == (int)Language.Korean) && Localization.CurrentLanguage != Language.Korean && CJKFontPatch.HasKoreanFont;
-                        bool needCjkFont = (i == (int)Language.SimplifiedChinese || i == (int)Language.Japanese) && Localization.CurrentLanguage == Language.Korean && CJKFontPatch.HasCjkFont;
+                        bool needCjkFont = (i == (int)Language.SimplifiedChinese || i == (int)Language.Japanese || i == (int)Language.TraditionalChinese) && Localization.CurrentLanguage == Language.Korean && CJKFontPatch.HasCjkFont;
 
                         if (needKoreanFont) ImGui.PushFont(CJKFontPatch.KoreanFont);
                         else if (needCjkFont) ImGui.PushFont(CJKFontPatch.CjkFont);
